@@ -172,3 +172,50 @@ Ranking
  ```dax
  Sales Amount = SUMX('historical-sales','historical-sales'[Total Sales])
  ```
+ - Sales Amount Rank
+ ```dax
+ Sales Amount Rank = RANKX(ALL('historical-sales'[store]),_Measures[Sales Amount])
+ ```
+ - Sales Store Rank Text
+ ```dax
+ Sales Store Rank Text = [Sales Amount Rank] & " OF " & [Store Count All]
+ ```
+ - Sales Monthly Average
+ ```dax
+ Sales Monthly Average = AVERAGEX(VALUES('Calendar'[Month_Year]), _Measures[Sales Amount])
+ ```
+ - Max Sales Month
+ ```dax
+ Max Sales Month = CALCULATE(MAX('Calendar'[Month_Year]), FILTER(ALL('Calendar'),[Sales Amount]))
+ ```
+ - Latest Sales Amount
+ ```dax
+ Latest Sales Amount = CALCULATE([Sales Amount], FILTER('Calendar', 'Calendar'[Month_Year] = [Max Sales Month]))
+ ```
+ - Sales Six Month Trend
+ ```dax
+ Sales 6M Trend = 
+ VAR LastSaleDate = LASTDATE ('historical-sales'[_date])
+ RETURN
+ AVERAGEX( 
+    DATESBETWEEN( 
+        'Calendar'[Month_Year],
+        DATEADD(STARTOFMONTH( LastSaleDate ), -5, MONTH),
+        ENDOFMONTH( LastSaleDate)
+    ),
+    [Month Over Month For Sales]
+)
+```
+- Sales Trend KPI
+```dax
+Sales Trend KPI = 
+VAR ChartIncrease = UNICHAR(128200)
+VAR ChartDecrease = UNICHAR(128201)
+VAR SixMonthTrend = [Sales 6M Trend]
+RETURN
+SWITCH(TRUE(),
+SixMonthTrend >= 0, ChartIncrease,
+SixMonthTrend <= 0, ChartDecrease
+)
+```
+---

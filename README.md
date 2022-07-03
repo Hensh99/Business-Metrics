@@ -163,3 +163,12 @@ VAR Ranking =
 RETURN
 Ranking
 ```
+---
+### KPI Scorecard Measures
+
+1. Sales
+
+- Sales Amount
+ ```dax
+ Sales Amount = SUMX('historical-sales','historical-sales'[Total Sales])
+ ```

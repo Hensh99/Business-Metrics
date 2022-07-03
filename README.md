@@ -164,9 +164,7 @@ RETURN
 Ranking
 ```
 ---
-## KPI Scorecard Measures
-
-1. Sales
+## KPI Scorecard For Sales
 
 - Sales Amount
  ```dax
@@ -212,6 +210,64 @@ Sales Trend KPI =
 VAR ChartIncrease = UNICHAR(128200)
 VAR ChartDecrease = UNICHAR(128201)
 VAR SixMonthTrend = [Sales 6M Trend]
+RETURN
+SWITCH(TRUE(),
+SixMonthTrend >= 0, ChartIncrease,
+SixMonthTrend <= 0, ChartDecrease
+)
+```
+---
+## KPI Scorecard For Return
+
+- Return Amount
+```dax
+Return Amount = 
+    SUMX(
+        FILTER(
+            'historical-sales','historical-sales'[type] = "Return"),
+            'historical-sales'[Sales Qty] * 'historical-sales'[Total Sales])
+```
+- Return Amount Rank
+```dax
+Return Amount Rank = RANKX(ALL('historical-sales'[store]),_Measures[Return Amount])
+```
+- Return Store Rank Text
+```dax
+Return Store Rank Text = [Return Amount Rank] & " OF " & [Store Count All]
+```
+- Return Monthly Avergae
+```dax
+Return Monthly Average = AVERAGEX(VALUES('Calendar'[Month_Year]), _Measures[Return Amount])
+```
+- Max Return Month
+```dax
+Max Return Month = CALCULATE(MAX('Calendar'[Month_Year]), FILTER(ALL('Calendar'),[Return Amount]))s
+```
+- Latest Return Amount
+```dax
+Latest Return Amount = CALCULATE([Return Amount], FILTER('Calendar', 'Calendar'[Month_Year] = [Max Return Month]))
+```
+- Return Six Month Trend
+```dax
+Return 6M Trend = 
+VAR LastReturnDate = LASTDATE ('historical-sales'[_date])
+RETURN
+ AVERAGEX( 
+    DATESBETWEEN( 
+        'Calendar'[Month_Year],
+        DATEADD(STARTOFMONTH(LastReturnDate), -5, MONTH),
+        ENDOFMONTH(LastReturnDate)
+    ),
+    [Month Over Month For Return]
+)
+```
+- Return Trend KPI
+```dax
+<!-- We need to fix the logic here -->
+Return Trend KPI = 
+VAR ChartIncrease = UNICHAR(128200)
+VAR ChartDecrease = UNICHAR(128201)
+VAR SixMonthTrend = [Return 6M Trend]
 RETURN
 SWITCH(TRUE(),
 SixMonthTrend >= 0, ChartIncrease,

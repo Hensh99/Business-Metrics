@@ -164,7 +164,7 @@ RETURN
 Ranking
 ```
 ---
-### KPI Scorecard Measures
+## KPI Scorecard Measures
 
 1. Sales
 

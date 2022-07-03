@@ -1,4 +1,4 @@
-## Business-Metrics-With-Dax
+## Business-Metrics-With-DAX
 > This repository aims to transform the most critical business logic into code with Dax so you can use these measures on Microsoft Power BI and then utilize them in the charts to analyze the results and hopefully find some patterns. 
 - COGS
 ```dax
@@ -235,7 +235,7 @@ Return Amount Rank = RANKX(ALL('historical-sales'[store]),_Measures[Return Amoun
 ```dax
 Return Store Rank Text = [Return Amount Rank] & " OF " & [Store Count All]
 ```
-- Return Monthly Avergae
+- Return Monthly Average
 ```dax
 Return Monthly Average = AVERAGEX(VALUES('Calendar'[Month_Year]), _Measures[Return Amount])
 ```

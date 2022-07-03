@@ -241,7 +241,7 @@ Return Monthly Average = AVERAGEX(VALUES('Calendar'[Month_Year]), _Measures[Retu
 ```
 - Max Return Month
 ```dax
-Max Return Month = CALCULATE(MAX('Calendar'[Month_Year]), FILTER(ALL('Calendar'),[Return Amount]))s
+Max Return Month = CALCULATE(MAX('Calendar'[Month_Year]), FILTER(ALL('Calendar'),[Return Amount]))
 ```
 - Latest Return Amount
 ```dax
